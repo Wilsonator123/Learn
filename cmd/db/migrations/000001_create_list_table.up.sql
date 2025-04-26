@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS list(
+  id SERIAL PRIMARY KEY,
+  title VARCHAR NOT NULL,
+  description VARCHAR NOT NULL,
+  priority VARCHAR DEFAULT 'p3',
+  created_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL
+)
