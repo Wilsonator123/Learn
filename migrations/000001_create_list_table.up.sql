@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS list(
-  id SERIAL PRIMARY KEY,
+  id UUID PRIMARY KEY,
   title VARCHAR NOT NULL,
   description VARCHAR NOT NULL,
-  priority VARCHAR DEFAULT 'p3',
+  priority VARCHAR,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL
 )

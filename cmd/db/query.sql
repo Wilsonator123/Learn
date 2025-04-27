@@ -13,11 +13,13 @@ INSERT INTO list(
 VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING id;
 -- name: UpdateItem :exec
-UPDATE list(
-    title,
-    description,
-    priority,
-    updated_at
-  )
-SET ($2, $3, $4, $5)
-WHERE id = $1
+UPDATE list
+SET title = $2,
+  description = $3,
+  priority = $4,
+  updated_at = $5
+WHERE id = $1;
+-- name: GetItem :one
+SELECT *
+from list
+WHERE id = $1;
