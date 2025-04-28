@@ -18,7 +18,6 @@ func New() *pgx.Conn {
 	if err != nil {
 		fmt.Printf("Unable to connect to database %v\n", err)
 	}
-	defer conn.Close(ctx)
 
 	return conn
 }

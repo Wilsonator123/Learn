@@ -7,7 +7,17 @@
 </head>
 
 <body>
-  <h1>Hello {{ . }}</h1>
+  <h1>Item List</h1>
+  {{ if .Error }}
+  <div>No items</div>
+  {{else}}
+  {{ range $index, $item := .Data }}
+  <div>
+    <h1>{{$index}} {{ $item.Title }}</h1>
+    <p>{{ $item.Description }} </p>
+  </div>
+  {{end}}
+  {{end}}
 </body>
 
 </html>

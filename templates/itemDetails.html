@@ -1,0 +1,9 @@
+{{ define "ItemDetails"}}
+
+<h1>Items Details</h1>
+{{ if not .Error}}
+{{ .Data }}
+{{else}}
+Item Not Found
+{{end}}
+{{end}}
