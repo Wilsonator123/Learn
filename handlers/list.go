@@ -12,16 +12,30 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type PriorityList struct{
+	NoPriority []repository.List
+	Other []repository.List
+}
 
-func ListAll() ([]repository.List, error) {
+func ListAll() (PriorityList, error) {
 	ctx := context.Background()
 	conn := config.New()
 	queries := repository.New(conn)
+	var response PriorityList;
 
-	response, err := queries.GetAllItems(ctx)
+	rows, err := queries.GetAllItems(ctx)
 	if err != nil {
 		fmt.Printf("Failed with error: %v\n", err)
-		return []repository.List{}, err
+		return PriorityList{}, err
+	}
+	
+	for i := range rows {
+		priority, _ := pgtype.Text.MarshalJSON(rows[i].Priority)
+		if(string(priority) != "null" ) {
+			response.Other = append(response.Other, rows[i])
+		} else {
+			response.NoPriority = append(response.NoPriority, rows[i])
+		}
 	}
 
 	conn.Close(ctx)

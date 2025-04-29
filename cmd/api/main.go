@@ -26,6 +26,7 @@ func main() {
 
 	e := echo.New()
 	e.Renderer = t
+	e.Static("/static", "static")
 
 	router.New(e);
 

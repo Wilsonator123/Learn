@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HTMX Modern List</title>
   <script src="https://unpkg.com/htmx.org@1.9.6"></script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="static/css/index.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 </head>
 
@@ -30,7 +30,30 @@
       </form>
 
       <!-- Items List -->
-      <div class="items-container">
+      <div class="columns">
+        <div class="column">
+          <h2>No Priority</h2>
+          {{ range $index, $item := .Data.NoPriority }}
+          <p>{{$item.Title}}</p>
+          {{end}}
+        </div>
+        <div class="column">
+          <h2>Priority 1</h2>
+          {{ range $index, $item := .Data.Other }}
+          <p>{{$item.Title}}</p>
+          {{end}}
+        </div>
+        <div class="column">
+          <h2>Priority 2</h2>
+          {{ range $index, $item := .Data.NoPriority }}
+          {{ template "item" $item }}
+          {{end}}
+        </div>
+        <div class="column">
+          Priority 3
+        </div>
+      </div>
+      {{/* <div class="items-container">
         <div class="list-header">
           <h2 class="list-title">Your tasks</h2>
         </div>
@@ -43,246 +66,20 @@
           <li class="item" id="item-1">
             <div class="item-content">
               <span>{{ $item.Title }}</span>
+              <p>{{ $item.Description }}</p>
             </div>
             <button class="delete-btn" hx-delete="/items/delete/1" hx-target="#item-1" hx-swap="outerHTML"
               aria-label="Delete item">
               Delete
             </button>
           </li>
-        </ul>
+        </ul> }}
         {{end}}
         {{end}}
-      </div>
+      </div> */}}
     </div>
   </div>
 </body>
 
 </html>
-
-<style>
-  /* Modern shadcn-inspired CSS */
-
-  :root {
-    --background: #ffffff;
-    --foreground: #0f172a;
-    --card: #ffffff;
-    --card-foreground: #0f172a;
-    --primary: #0f172a;
-    --primary-foreground: #f8fafc;
-    --secondary: #f1f5f9;
-    --secondary-foreground: #0f172a;
-    --muted: #f1f5f9;
-    --muted-foreground: #64748b;
-    --accent: #f1f5f9;
-    --accent-foreground: #0f172a;
-    --destructive: #ef4444;
-    --destructive-foreground: #f8fafc;
-    --border: #e2e8f0;
-    --input: #e2e8f0;
-    --ring: #94a3b8;
-    --radius: 0.5rem;
-  }
-
-  /* Base styles */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  body {
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: #f8fafc;
-    color: var(--foreground);
-    line-height: 1.6;
-    min-height: 100vh;
-    padding: 2rem 1rem;
-  }
-
-  /* Container styles */
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  .card {
-    background-color: var(--card);
-    border-radius: var(--radius);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 10px 15px -5px rgba(0, 0, 0, 0.05);
-    border: 1px solid var(--border);
-    overflow: hidden;
-  }
-
-  .card-header {
-    padding: 1.5rem 1.5rem 1rem;
-  }
-
-  .card-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--card-foreground);
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
-  }
-
-  .card-description {
-    color: var(--muted-foreground);
-    font-size: 0.875rem;
-  }
-
-  /* Form styles */
-  .add-form {
-    padding: 1rem 1.5rem;
-  }
-
-  .input-wrapper {
-    display: flex;
-    width: 100%;
-    position: relative;
-  }
-
-  .add-form input {
-    flex-grow: 1;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--input);
-    border-radius: var(--radius);
-    font-size: 0.875rem;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    color: var(--foreground);
-    background-color: var(--background);
-  }
-
-  .add-form input:focus {
-    border-color: var(--ring);
-    box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.2);
-  }
-
-  .add-form button {
-    margin-left: 0.5rem;
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    border: none;
-    border-radius: var(--radius);
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s, opacity 0.2s;
-  }
-
-  .add-form button:hover {
-    opacity: 0.9;
-  }
-
-  .add-form button:active {
-    opacity: 0.8;
-  }
-
-  /* List styles */
-  .items-container {
-    padding: 0 1.5rem 1.5rem;
-  }
-
-  .list-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.75rem;
-  }
-
-  .list-title {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--muted-foreground);
-  }
-
-  .items-list {
-    list-style-type: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    background-color: var(--background);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    transition: background-color 0.2s;
-  }
-
-  .item:hover {
-    background-color: var(--secondary);
-  }
-
-  .item-content {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .item span {
-    color: var(--foreground);
-    font-size: 0.875rem;
-  }
-
-  .delete-btn {
-    background: none;
-    border: none;
-    color: var(--muted-foreground);
-    cursor: pointer;
-    font-size: 0.75rem;
-    font-weight: 500;
-    padding: 0.25rem 0.5rem;
-    border-radius: calc(var(--radius) * 0.75);
-    transition: background-color 0.2s, color 0.2s;
-  }
-
-  .delete-btn:hover {
-    background-color: var(--destructive);
-    color: var(--destructive-foreground);
-  }
-
-  /* Animation for new items */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .items-list li {
-    animation: fadeIn 0.2s ease-out forwards;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 640px) {
-    .container {
-      width: 100%;
-    }
-
-    .card-header {
-      padding: 1.25rem 1.25rem 0.75rem;
-    }
-
-    .add-form,
-    .items-container {
-      padding-left: 1.25rem;
-      padding-right: 1.25rem;
-    }
-
-    .card-title {
-      font-size: 1.25rem;
-    }
-  }
-</style>
 {{end}}
