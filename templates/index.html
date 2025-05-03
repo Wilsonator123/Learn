@@ -9,74 +9,49 @@
   <script src="https://unpkg.com/htmx.org@1.9.6"></script>
   <link rel="stylesheet" href="static/css/index.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <script src="/static/js/scripts.js" defer></script>
 </head>
 
 <body>
   <div class="container">
-    <div class="card">
+    <div class="card" x-data="{ open: false }">
       <div class="card-header">
-        <h1 class="card-title">Tasks</h1>
-        <p class="card-description">Manage your daily tasks and activities</p>
+        <div>
+          <h1 class="card-title">Tasks</h1>
+          <p class="card-description">Manage your daily tasks and activities</p>
+        </div>
+        <button @click="open = !open" x-text="open ? 'Close' : 'New Item'"></button>
       </div>
 
       <!-- Add Item Form -->
-      <form class="add-form" hx-post="/items/add" hx-target="#items-list" hx-swap="beforeend">
-        <div class="input-wrapper">
-          <input type="text" name="text" placeholder="Add a new task..." required>
-          <button type="submit">
-            Add
-          </button>
-        </div>
-      </form>
+      {{ template "newItemForm" }}
 
       <!-- Items List -->
       <div class="columns">
         <div class="column">
           <h2>No Priority</h2>
           {{ range $index, $item := .Data.NoPriority }}
-          <p>{{$item.Title}}</p>
+          {{ template "item" $item }}
           {{end}}
         </div>
-        <div class="column">
+        <div class="column dropzone" data-priority="1">
           <h2>Priority 1</h2>
           {{ range $index, $item := .Data.Other }}
-          <p>{{$item.Title}}</p>
+          {{ template "item" $item }}
           {{end}}
         </div>
-        <div class="column">
+        <div class="column dropzone" data-priority="2">
           <h2>Priority 2</h2>
           {{ range $index, $item := .Data.NoPriority }}
           {{ template "item" $item }}
           {{end}}
         </div>
-        <div class="column">
-          Priority 3
+        <div class="column dropzone" id="drop-target" data-priority="3">
+          <h2>Priority 3</h2>
         </div>
       </div>
-      {{/* <div class="items-container">
-        <div class="list-header">
-          <h2 class="list-title">Your tasks</h2>
-        </div>
-        {{ if .Error }}
-        <p>No tasks found</p>
-        {{else}}
-        {{ range $index, $item := .Data }}
-        <ul id="items-list" class="items-list">
-          <!-- Example items - these would be replaced by server-rendered content -->
-          <li class="item" id="item-1">
-            <div class="item-content">
-              <span>{{ $item.Title }}</span>
-              <p>{{ $item.Description }}</p>
-            </div>
-            <button class="delete-btn" hx-delete="/items/delete/1" hx-target="#item-1" hx-swap="outerHTML"
-              aria-label="Delete item">
-              Delete
-            </button>
-          </li>
-        </ul> }}
-        {{end}}
-        {{end}}
-      </div> */}}
     </div>
   </div>
 </body>

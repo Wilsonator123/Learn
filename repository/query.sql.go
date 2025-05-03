@@ -23,7 +23,7 @@ INSERT INTO list(
     updated_at
   )
 VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id
+RETURNING id, title, description, priority, created_at, updated_at
 `
 
 type CreateNewItemParams struct {
@@ -35,7 +35,7 @@ type CreateNewItemParams struct {
 	UpdatedAt   time.Time   `json:"updated_at"`
 }
 
-func (q *Queries) CreateNewItem(ctx context.Context, arg CreateNewItemParams) (uuid.UUID, error) {
+func (q *Queries) CreateNewItem(ctx context.Context, arg CreateNewItemParams) (List, error) {
 	row := q.db.QueryRow(ctx, createNewItem,
 		arg.ID,
 		arg.Title,
@@ -44,9 +44,26 @@ func (q *Queries) CreateNewItem(ctx context.Context, arg CreateNewItemParams) (u
 		arg.CreatedAt,
 		arg.UpdatedAt,
 	)
-	var id uuid.UUID
-	err := row.Scan(&id)
-	return id, err
+	var i List
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Description,
+		&i.Priority,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const deleteItem = `-- name: DeleteItem :exec
+DELETE FROM list
+WHERE id = $1
+`
+
+func (q *Queries) DeleteItem(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteItem, id)
+	return err
 }
 
 const getAllItems = `-- name: GetAllItems :many

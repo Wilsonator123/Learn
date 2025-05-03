@@ -66,7 +66,7 @@ func GetItem(id string) (repository.List, error) {
 	return response, nil
 }
 
-func CreateItem(input model.NewItem) (string, error) {
+func CreateItem(input model.NewItem) (repository.List, error) {
 	ctx := context.Background()
 	conn := config.New()
 	queries := repository.New(conn)
@@ -91,23 +91,37 @@ func CreateItem(input model.NewItem) (string, error) {
 	}
 	
 
-	id, err := queries.CreateNewItem(ctx, newItem)
+	item, err := queries.CreateNewItem(ctx, newItem)
 
 	if err != nil {
 		fmt.Printf("Failed to create user %v\n", err)
-		return "", err
-	}
-
-	userId, err := id.MarshalText()
-
-	if err != nil {
-		fmt.Printf("Failed to parse UUID %v\n", err)
-		return "", err
+		return repository.List{}, err
 	}
 
 	conn.Close(ctx)
 
-	return string(userId), nil
+	return item, nil
+}
+
+func DeleteItem(id string) bool {
+	ctx := context.Background()
+	conn := config.New()
+	queries := repository.New(conn)
+
+	parsedUUID, err := uuid.Parse(id)
+	if err != nil {
+		fmt.Printf("Failed to parse UUID: %v\n", err)
+		return false
+	}
+
+	err = queries.DeleteItem(ctx, parsedUUID)
+	if err != nil {
+		fmt.Printf("Failed with error: %v\n", err)
+		return false
+	}
+
+	return true
+	
 }
 
 // func UpdateItem(id string, new_item repository.List) bool {

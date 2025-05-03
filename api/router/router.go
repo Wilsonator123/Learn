@@ -1,7 +1,6 @@
 package router
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -15,7 +14,7 @@ var validate = validator.New()
 
 func New(e* echo.Echo ){
 	e.GET("/", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "index", "World")
+		return c.Render(http.StatusOK, "item", "World")
 	})
 
 	e.GET("/list", func(c echo.Context) error {
@@ -26,20 +25,18 @@ func New(e* echo.Echo ){
 	})
 
 	e.POST("/list", func(c echo.Context) error {
-
-		var newItem model.NewItem
 		
-		if err := json.NewDecoder(c.Request().Body).Decode(&newItem); err != nil {
-			fmt.Printf("Error parsing body %v\n", err)
-			return err
+		priority := c.FormValue("priority")
+		newItem := model.NewItem{
+			Title: c.FormValue("title"),
+			Description: c.FormValue("description"),
+			Priority: &priority,
 		}
-
+		
 		if err := validate.Struct(newItem); err != nil {
-			validationErrors := err.(validator.ValidationErrors)
-			fmt.Printf("Error parsing body %v\n", err)
-			return c.Render(http.StatusBadRequest, "error", fmt.Sprintf("Validation failed: %v", validationErrors))
+			fmt.Printf("Error parsing form data %v\n", err)
+			return c.String(http.StatusBadRequest, "Failed to parse form data")
 		}
-
 
 		response, err := handlers.CreateItem(newItem)
 
@@ -51,7 +48,7 @@ func New(e* echo.Echo ){
 			return c.JSON(http.StatusInternalServerError, err.Error())
 		}
 
-		return c.Redirect(http.StatusSeeOther, "/list/" + response)
+		return c.Render(http.StatusCreated, "item", response)
 	})
 
 	e.GET("/list/:id", func(c echo.Context) error {
@@ -61,6 +58,16 @@ func New(e* echo.Echo ){
 		response, err := handlers.GetItem(id)
 		
 		return c.Render(http.StatusOK, "ItemDetails", map[string]interface{}{"Data": response, "Error": err})
+	})
+
+	e.DELETE("/list/:id", func(c echo.Context) error {
+		
+		id := c.Param("id")
+
+		handlers.DeleteItem(id)
+
+		return c.HTML(http.StatusOK,"<div>Deleted</div>" )
+
 	})
 	
 

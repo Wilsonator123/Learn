@@ -1,0 +1,119 @@
+{{ define "newItemForm" }}
+
+<form x-show="open" class="task-form" hx-post="/list" hx-target="#tasks-container" hx-swap="beforeend">
+  <div class="form-group">
+    <label for="task-title" class="form-label">Title</label>
+    <input type="text" id="task-title" name="title" class="form-input" placeholder="Enter task title" required>
+  </div>
+  <div class="form-group">
+    <label for="task-description" class="form-label">Description</label>
+    <textarea id="task-description" name="description" class="form-textarea" placeholder="Enter task description"
+      rows="3"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="task-priority" class="form-label">Priority</label>
+    <select id="task-priority" name="priority" class="form-select">
+      <option value="0">No Priority</option>
+      <option value="1">Priority 1</option>
+      <option value="2">Priority 2</option>
+      <option value="3">Priority 3</option>
+    </select>
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="form-submit">Add Task</button>
+  </div>
+</form>
+<style>
+  /* Form styling */
+  .task-form {
+    background-color: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 1.25rem;
+    width: 75%;
+    margin: 15px auto;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-group:last-of-type {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--foreground);
+    margin-bottom: 0.5rem;
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: var(--ring);
+    box-shadow: 0 0 0 1px var(--ring);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    height: 2.5rem;
+    padding: 0 1rem;
+    border-radius: var(--radius);
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .form-submit:hover {
+    opacity: 0.9;
+  }
+
+  .form-submit:active {
+    opacity: 0.8;
+  }
+</style>
+
+{{ end }}

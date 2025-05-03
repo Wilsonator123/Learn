@@ -11,7 +11,7 @@ INSERT INTO list(
     updated_at
   )
 VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id;
+RETURNING *;
 -- name: UpdateItem :exec
 UPDATE list
 SET title = $2,
@@ -22,4 +22,7 @@ WHERE id = $1;
 -- name: GetItem :one
 SELECT *
 from list
+WHERE id = $1;
+-- name: DeleteItem :exec
+DELETE FROM list
 WHERE id = $1;
