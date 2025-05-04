@@ -23,6 +23,10 @@ func New(e* echo.Echo ){
 		response, err := handlers.ListAll()
 
 		if c.Request().Header.Get("HX-Request") == "true" {
+			if err != nil {
+			return c.Render(http.StatusOK, "ColumnList", map[string]interface{}{"Error": err})
+				
+			}
 			return c.Render(http.StatusOK, "ColumnList", map[string]interface{}{"Data": response, "Error": err})
 		}
 		

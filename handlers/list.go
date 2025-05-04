@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -24,6 +25,10 @@ func ListAll() (PriorityList, error) {
 	conn := config.New()
 	queries := repository.New(conn)
 	var response PriorityList;
+
+	if queries == nil {
+		return PriorityList{}, errors.New("database connection failed")
+	}
 
 	rows, err := queries.GetAllItems(ctx)
 	if err != nil {
