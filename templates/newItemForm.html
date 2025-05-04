@@ -1,37 +1,61 @@
 {{ define "newItemForm" }}
 
-<form x-show="open" class="task-form" hx-post="/list" hx-target="#tasks-container" hx-swap="beforeend">
-  <div class="form-group">
-    <label for="task-title" class="form-label">Title</label>
-    <input type="text" id="task-title" name="title" class="form-input" placeholder="Enter task title" required>
-  </div>
-  <div class="form-group">
-    <label for="task-description" class="form-label">Description</label>
-    <textarea id="task-description" name="description" class="form-textarea" placeholder="Enter task description"
-      rows="3"></textarea>
-  </div>
-  <div class="form-group">
-    <label for="task-priority" class="form-label">Priority</label>
-    <select id="task-priority" name="priority" class="form-select">
-      <option value="0">No Priority</option>
-      <option value="1">Priority 1</option>
-      <option value="2">Priority 2</option>
-      <option value="3">Priority 3</option>
-    </select>
-  </div>
-  <div class="form-actions">
-    <button type="submit" class="form-submit">Add Task</button>
+<form x-show="open" class="modal-wrapper" hx-post="/list" hx-swap="none" hx-on::after-request="location.reload()">>
+  <div class="task-form">
+    <img src="/static/svg/close.svg" class="closeModal" @click="open = false" />
+
+    <div class="form-group">
+      <label for="task-title" class="form-label">Title</label>
+      <input type="text" id="task-title" name="title" class="form-input" placeholder="Enter task title" required>
+    </div>
+    <div class="form-group">
+      <label for="task-description" class="form-label">Description</label>
+      <textarea id="task-description" name="description" class="form-textarea" placeholder="Enter task description"
+        rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="task-priority" class="form-label">Priority</label>
+      <select id="task-priority" name="priority" class="form-select">
+        <option value="0">No Priority</option>
+        <option value="1">Priority 1</option>
+        <option value="2">Priority 2</option>
+        <option value="3">Priority 3</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button type="submit" @click="open = false" class="form-submit">Add Task</button>
+    </div>
   </div>
 </form>
 <style>
+  .modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Optional: adds a semi-transparent overlay */
+    z-index: 50;
+  }
+
+  .closeModal {
+    float: right;
+
+  }
+
   /* Form styling */
   .task-form {
     background-color: var(--card);
     border-radius: var(--radius);
     border: 1px solid var(--border);
     padding: 1.25rem;
-    width: 75%;
-    margin: 15px auto;
+    min-width: 600px;
+    max-width: 900px;
+    position: absolute;
   }
 
   .form-group {
@@ -44,7 +68,7 @@
 
   .form-label {
     display: block;
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--foreground);
     margin-bottom: 0.5rem;
@@ -55,7 +79,7 @@
   .form-select {
     width: 100%;
     padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
     line-height: 1.5;
     border-radius: var(--radius);
     border: 1px solid var(--border);

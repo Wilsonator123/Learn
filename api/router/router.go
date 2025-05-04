@@ -3,6 +3,7 @@ package router
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/Wilsonator123/Learn/handlers"
 	"github.com/Wilsonator123/Learn/model"
@@ -14,23 +15,32 @@ var validate = validator.New()
 
 func New(e* echo.Echo ){
 	e.GET("/", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "item", "World")
+		return c.Render(http.StatusOK, "index", map[string]interface{}{});
 	})
 
 	e.GET("/list", func(c echo.Context) error {
 		
 		response, err := handlers.ListAll()
+
+		if c.Request().Header.Get("HX-Request") == "true" {
+			return c.Render(http.StatusOK, "ColumnList", map[string]interface{}{"Data": response, "Error": err})
+		}
 		
 		return c.Render(http.StatusOK, "index", map[string]interface{}{"Data": response, "Error": err})
 	})
 
 	e.POST("/list", func(c echo.Context) error {
 		
-		priority := c.FormValue("priority")
+		priorityStr := c.FormValue("priority")
+		priorityInt, err := strconv.ParseInt(priorityStr, 10, 16)
+		if err != nil {
+			return c.String(http.StatusBadRequest, "Invalid priority value")
+		}
+		priorityInt16 := int16(priorityInt)
 		newItem := model.NewItem{
 			Title: c.FormValue("title"),
 			Description: c.FormValue("description"),
-			Priority: &priority,
+			Priority: &priorityInt16,
 		}
 		
 		if err := validate.Struct(newItem); err != nil {

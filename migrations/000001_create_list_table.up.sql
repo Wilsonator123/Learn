@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS list(
   id UUID PRIMARY KEY,
   title VARCHAR NOT NULL,
   description VARCHAR NOT NULL,
-  priority VARCHAR,
+  priority SMALLINT,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL
 )

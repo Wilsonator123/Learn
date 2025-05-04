@@ -22,36 +22,16 @@
           <h1 class="card-title">Tasks</h1>
           <p class="card-description">Manage your daily tasks and activities</p>
         </div>
-        <button @click="open = !open" x-text="open ? 'Close' : 'New Item'"></button>
+        <button @click="open = true">New Task</button>
       </div>
 
       <!-- Add Item Form -->
       {{ template "newItemForm" }}
 
       <!-- Items List -->
-      <div class="columns">
-        <div class="column">
-          <h2>No Priority</h2>
-          {{ range $index, $item := .Data.NoPriority }}
-          {{ template "item" $item }}
-          {{end}}
-        </div>
-        <div class="column dropzone" data-priority="1">
-          <h2>Priority 1</h2>
-          {{ range $index, $item := .Data.Other }}
-          {{ template "item" $item }}
-          {{end}}
-        </div>
-        <div class="column dropzone" data-priority="2">
-          <h2>Priority 2</h2>
-          {{ range $index, $item := .Data.NoPriority }}
-          {{ template "item" $item }}
-          {{end}}
-        </div>
-        <div class="column dropzone" id="drop-target" data-priority="3">
-          <h2>Priority 3</h2>
-        </div>
+      <div class="columns" hx-get="/list" hx-swap="innerHTML" hx-trigger="load, itemsChanged from:body">
       </div>
+
     </div>
   </div>
 </body>

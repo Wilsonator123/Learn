@@ -14,7 +14,9 @@ import (
 
 type PriorityList struct{
 	NoPriority []repository.List
-	Other []repository.List
+	Priority1 []repository.List
+	Priority2 []repository.List
+	Priority3 []repository.List
 }
 
 func ListAll() (PriorityList, error) {
@@ -30,10 +32,15 @@ func ListAll() (PriorityList, error) {
 	}
 	
 	for i := range rows {
-		priority, _ := pgtype.Text.MarshalJSON(rows[i].Priority)
-		if(string(priority) != "null" ) {
-			response.Other = append(response.Other, rows[i])
-		} else {
+		priority := rows[i].Priority.Int16
+		switch priority {
+		case 1:
+			response.Priority1 = append(response.Priority1, rows[i])
+		case 2:
+			response.Priority2 = append(response.Priority2, rows[i])
+		case 3:
+			response.Priority3 = append(response.Priority3, rows[i])
+		default:
 			response.NoPriority = append(response.NoPriority, rows[i])
 		}
 	}
@@ -84,8 +91,8 @@ func CreateItem(input model.NewItem) (repository.List, error) {
 	}
 
 	if input.Priority != nil {
-		newItem.Priority = pgtype.Text{
-			String: *input.Priority,
+		newItem.Priority = pgtype.Int2{
+			Int16: *input.Priority,
 			Valid:  true,
 		}
 	}

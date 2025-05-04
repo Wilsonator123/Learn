@@ -1,0 +1,34 @@
+{{ define "ColumnList"}}
+<div class="column">
+  <h2>No Priority</h2>
+  {{ if .Data }}
+  {{ range $index, $item := .Data.NoPriority }}
+  {{ template "item" $item }}
+  {{end}}
+  {{end}}
+</div>
+<div class="column dropzone" data-priority="1">
+  <h2>Priority 1</h2>
+  {{ if .Data }}
+  {{ range $index, $item := .Data.Priority1 }}
+  {{ template "item" $item }}
+  {{end}}
+  {{end}}
+</div>
+<div class="column dropzone" data-priority="2">
+  <h2>Priority 2</h2>
+  {{ if .Data }}
+  {{ range $index, $item := .Data.Priority2 }}
+  {{ template "item" $item }}
+  {{end}}
+  {{end}}
+</div>
+<div class="column dropzone" id="tasks-container" data-priority="3">
+  <h2>Priority 3</h2>
+  {{ if .Data }}
+  {{ range $index, $item := .Data.Priority3 }}
+  {{ template "item" $item }}
+  {{end}}
+  {{end}}
+</div>
+{{end}}

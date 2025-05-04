@@ -15,7 +15,7 @@ type List struct {
 	ID          uuid.UUID   `json:"id"`
 	Title       string      `json:"title"`
 	Description string      `json:"description"`
-	Priority    pgtype.Text `json:"priority"`
+	Priority    pgtype.Int2 `json:"priority"`
 	CreatedAt   time.Time   `json:"created_at"`
 	UpdatedAt   time.Time   `json:"updated_at"`
 }
