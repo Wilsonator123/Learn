@@ -22,13 +22,14 @@ type PriorityList struct{
 
 func ListAll() (PriorityList, error) {
 	ctx := context.Background()
-	conn := config.New()
-	queries := repository.New(conn)
-	var response PriorityList;
+	conn, err := config.New()
 
-	if queries == nil {
+	if err != nil {
 		return PriorityList{}, errors.New("database connection failed")
 	}
+
+	queries := repository.New(conn)
+	var response PriorityList;
 
 	rows, err := queries.GetAllItems(ctx)
 	if err != nil {
@@ -57,7 +58,12 @@ func ListAll() (PriorityList, error) {
 
 func GetItem(id string) (repository.List, error) {
 	ctx := context.Background()
-	conn := config.New()
+	conn, err := config.New()
+
+	if err != nil {
+		return repository.List{}, errors.New("database connection failed")
+	}
+
 	queries := repository.New(conn)
 
 	parsedUUID, err := uuid.Parse(id)
@@ -80,7 +86,12 @@ func GetItem(id string) (repository.List, error) {
 
 func CreateItem(input model.NewItem) (repository.List, error) {
 	ctx := context.Background()
-	conn := config.New()
+	conn, err := config.New()
+
+	if err != nil {
+		return repository.List{}, errors.New("database connection failed")
+	}
+
 	queries := repository.New(conn)
 
 	id := uuid.New()
@@ -117,7 +128,12 @@ func CreateItem(input model.NewItem) (repository.List, error) {
 
 func DeleteItem(id string) bool {
 	ctx := context.Background()
-	conn := config.New()
+	conn, err := config.New()
+
+	if err != nil {
+		return false
+	}
+
 	queries := repository.New(conn)
 
 	parsedUUID, err := uuid.Parse(id)

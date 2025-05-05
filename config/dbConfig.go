@@ -8,7 +8,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
 )
-func New() *pgx.Conn {
+func New() (*pgx.Conn, error) {
 	godotenv.Load()
 	value := os.Getenv("DATABASE_URL")
 
@@ -19,5 +19,5 @@ func New() *pgx.Conn {
 		fmt.Printf("Unable to connect to database %v\n", err)
 	}
 
-	return conn
+	return conn, err
 }
