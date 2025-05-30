@@ -8,9 +8,9 @@ import (
 
 type GroupedColumns struct {
 	Position int16 `json:"position"`
-	Tasks []repository.List `json:"tasks"`
+	Tasks []repository.Task `json:"tasks"`
 }
-func GroupTasksByColumn(tasks []repository.List) []GroupedColumns {
+func GroupTasksByColumn(tasks []repository.Task) []GroupedColumns {
 	response := []GroupedColumns{}
 	var columnSeen []int16;
 
@@ -27,7 +27,7 @@ func GroupTasksByColumn(tasks []repository.List) []GroupedColumns {
 		if idx == -1 {
 			response = append(response, GroupedColumns{
 				Position: column,
-				Tasks: []repository.List{task},
+				Tasks: []repository.Task{task},
 			})
 		} else {
 			response[idx] = GroupedColumns{

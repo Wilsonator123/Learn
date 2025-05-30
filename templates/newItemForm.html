@@ -1,6 +1,6 @@
-{{ define "newItemForm" }}
+{{ define "newTaskForm" }}
 
-<form x-show="open" class="modal-wrapper" hx-post="/list" hx-swap="none" hx-on::after-request="location.reload()">>
+<form x-show="open" class="modal-wrapper" hx-post="/task" hx-swap="none" hx-on::after-request="location.reload()">>
   <div class="task-form">
     <img src="/static/svg/close.svg" class="closeModal" @click="open = false" />
 
@@ -10,8 +10,8 @@
     </div>
     <div class="form-group">
       <label for="task-description" class="form-label">Description</label>
-      <textarea id="task-description" name="description" class="form-textarea" placeholder="Enter task description"
-        rows="3"></textarea>
+      <textarea required id="task-description" name="description" class="form-textarea"
+        placeholder="Enter task description" rows="3"></textarea>
     </div>
     <div class="form-group">
       <label for="task-priority" class="form-label">Starting Column</label>

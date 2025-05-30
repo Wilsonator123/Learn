@@ -13,8 +13,8 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const createNewItem = `-- name: CreateNewItem :one
-INSERT INTO list(
+const createNewTask = `-- name: CreateNewTask :one
+INSERT INTO task(
     id,
     title,
     position,
@@ -26,7 +26,7 @@ VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING id, title, description, created_at, updated_at, tab_id, position
 `
 
-type CreateNewItemParams struct {
+type CreateNewTaskParams struct {
 	ID          uuid.UUID   `json:"id"`
 	Title       string      `json:"title"`
 	Position    pgtype.Int2 `json:"position"`
@@ -35,8 +35,8 @@ type CreateNewItemParams struct {
 	UpdatedAt   time.Time   `json:"updated_at"`
 }
 
-func (q *Queries) CreateNewItem(ctx context.Context, arg CreateNewItemParams) (List, error) {
-	row := q.db.QueryRow(ctx, createNewItem,
+func (q *Queries) CreateNewTask(ctx context.Context, arg CreateNewTaskParams) (Task, error) {
+	row := q.db.QueryRow(ctx, createNewTask,
 		arg.ID,
 		arg.Title,
 		arg.Position,
@@ -44,7 +44,7 @@ func (q *Queries) CreateNewItem(ctx context.Context, arg CreateNewItemParams) (L
 		arg.CreatedAt,
 		arg.UpdatedAt,
 	)
-	var i List
+	var i Task
 	err := row.Scan(
 		&i.ID,
 		&i.Title,
@@ -57,30 +57,30 @@ func (q *Queries) CreateNewItem(ctx context.Context, arg CreateNewItemParams) (L
 	return i, err
 }
 
-const deleteItem = `-- name: DeleteItem :exec
-DELETE FROM list
+const deleteTask = `-- name: DeleteTask :exec
+DELETE FROM task
 WHERE id = $1
 `
 
-func (q *Queries) DeleteItem(ctx context.Context, id uuid.UUID) error {
-	_, err := q.db.Exec(ctx, deleteItem, id)
+func (q *Queries) DeleteTask(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteTask, id)
 	return err
 }
 
-const getAllItems = `-- name: GetAllItems :many
+const getAllTasks = `-- name: GetAllTasks :many
 SELECT id, title, description, created_at, updated_at, tab_id, position
-from list
+from task
 `
 
-func (q *Queries) GetAllItems(ctx context.Context) ([]List, error) {
-	rows, err := q.db.Query(ctx, getAllItems)
+func (q *Queries) GetAllTasks(ctx context.Context) ([]Task, error) {
+	rows, err := q.db.Query(ctx, getAllTasks)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []List
+	var items []Task
 	for rows.Next() {
-		var i List
+		var i Task
 		if err := rows.Scan(
 			&i.ID,
 			&i.Title,
@@ -97,19 +97,18 @@ func (q *Queries) GetAllItems(ctx context.Context) ([]List, error) {
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
-	
 	return items, nil
 }
 
-const getItem = `-- name: GetItem :one
+const getTask = `-- name: GetTask :one
 SELECT id, title, description, created_at, updated_at, tab_id, position
-from list
+from task
 WHERE id = $1
 `
 
-func (q *Queries) GetItem(ctx context.Context, id uuid.UUID) (List, error) {
-	row := q.db.QueryRow(ctx, getItem, id)
-	var i List
+func (q *Queries) GetTask(ctx context.Context, id uuid.UUID) (Task, error) {
+	row := q.db.QueryRow(ctx, getTask, id)
+	var i Task
 	err := row.Scan(
 		&i.ID,
 		&i.Title,
@@ -122,8 +121,8 @@ func (q *Queries) GetItem(ctx context.Context, id uuid.UUID) (List, error) {
 	return i, err
 }
 
-const updateItem = `-- name: UpdateItem :exec
-UPDATE list
+const updateTask = `-- name: UpdateTask :exec
+UPDATE task
 SET title = $2,
   description = $3,
   position = $4,
@@ -131,7 +130,7 @@ SET title = $2,
 WHERE id = $1
 `
 
-type UpdateItemParams struct {
+type UpdateTaskParams struct {
 	ID          uuid.UUID   `json:"id"`
 	Title       string      `json:"title"`
 	Description string      `json:"description"`
@@ -139,8 +138,8 @@ type UpdateItemParams struct {
 	UpdatedAt   time.Time   `json:"updated_at"`
 }
 
-func (q *Queries) UpdateItem(ctx context.Context, arg UpdateItemParams) error {
-	_, err := q.db.Exec(ctx, updateItem,
+func (q *Queries) UpdateTask(ctx context.Context, arg UpdateTaskParams) error {
+	_, err := q.db.Exec(ctx, updateTask,
 		arg.ID,
 		arg.Title,
 		arg.Description,

@@ -17,10 +17,10 @@ func main() {
 		return
 	}
 	
-	err = conn.QueryRow(context.Background(), "CREATE DATABASE list").Scan()
+	err = conn.QueryRow(context.Background(), "CREATE DATABASE progress").Scan()
 
 	if err != nil {
 		fmt.Println("Failed to create Database")
 	}
-	fmt.Println("Created Database list")
+	fmt.Println("Created Database progress")
 }

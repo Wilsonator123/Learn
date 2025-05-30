@@ -1,8 +1,8 @@
--- name: GetAllItems :many
+-- name: GetAllTasks :many
 SELECT *
-from list;
--- name: CreateNewItem :one
-INSERT INTO list(
+from task;
+-- name: CreateNewTask :one
+INSERT INTO task(
     id,
     title,
     position,
@@ -12,17 +12,17 @@ INSERT INTO list(
   )
 VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING *;
--- name: UpdateItem :exec
-UPDATE list
+-- name: UpdateTask :exec
+UPDATE task
 SET title = $2,
   description = $3,
   position = $4,
   updated_at = $5
 WHERE id = $1;
--- name: GetItem :one
+-- name: GetTask :one
 SELECT *
-from list
+from task
 WHERE id = $1;
--- name: DeleteItem :exec
-DELETE FROM list
+-- name: DeleteTask :exec
+DELETE FROM task
 WHERE id = $1;

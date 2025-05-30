@@ -15,7 +15,7 @@ import (
 )
 
 type Column struct {
-	Tasks []repository.List `json:"tasks"`
+	Tasks []repository.Task `json:"tasks"`
 	Position int16 `json:"position"`
 }
 
@@ -29,7 +29,7 @@ func ListAll() ([]helper.GroupedColumns, error) {
 
 	queries := repository.New(conn)
 
-	tasks, err := queries.GetAllItems(ctx)
+	tasks, err := queries.GetAllTasks(ctx)
 
 	response := helper.GroupTasksByColumn(tasks)
 	if err != nil {
@@ -42,12 +42,12 @@ func ListAll() ([]helper.GroupedColumns, error) {
 	return response, nil
 }
 
-func GetItem(id string) (repository.List, error) {
+func GetTask(id string) (repository.Task, error) {
 	ctx := context.Background()
 	conn, err := config.New()
 
 	if err != nil {
-		return repository.List{}, errors.New("database connection failed")
+		return repository.Task{}, errors.New("database connection failed")
 	}
 
 	queries := repository.New(conn)
@@ -56,13 +56,13 @@ func GetItem(id string) (repository.List, error) {
 	
 	if err != nil {
 		fmt.Printf("Failed to parse UUID: %v\n", err)
-		return repository.List{}, err
+		return repository.Task{}, err
 	}
 
-	response, err := queries.GetItem(ctx, parsedUUID)
+	response, err := queries.GetTask(ctx, parsedUUID)
 	if err != nil {
 		fmt.Printf("Failed with error: %v\n", err)
-		return repository.List{}, err
+		return repository.Task{}, err
 	}
 
 	conn.Close(ctx)
@@ -70,12 +70,12 @@ func GetItem(id string) (repository.List, error) {
 	return response, nil
 }
 
-func CreateItem(input model.NewItem) (repository.List, error) {
+func CreateTask(input model.NewTask) (repository.Task, error) {
 	ctx := context.Background()
 	conn, err := config.New()
 
 	if err != nil {
-		return repository.List{}, errors.New("database connection failed")
+		return repository.Task{}, errors.New("database connection failed")
 	}
 
 	queries := repository.New(conn)
@@ -84,7 +84,7 @@ func CreateItem(input model.NewItem) (repository.List, error) {
 
 	now := time.Now()
 
-	newItem := repository.CreateNewItemParams{
+	newTask := repository.CreateNewTaskParams{
 		ID:          id,
 		Title:       input.Title,
 		Description: input.Description,
@@ -93,26 +93,26 @@ func CreateItem(input model.NewItem) (repository.List, error) {
 	}
 
 	if input.Position != nil {
-		newItem.Position = pgtype.Int2{
+		newTask.Position = pgtype.Int2{
 			Int16: *input.Position,
 			Valid:  true,
 		}
 	}
 	
 
-	item, err := queries.CreateNewItem(ctx, newItem)
+	task, err := queries.CreateNewTask(ctx, newTask)
 
 	if err != nil {
 		fmt.Printf("Failed to create user %v\n", err)
-		return repository.List{}, err
+		return repository.Task{}, err
 	}
 
 	conn.Close(ctx)
 
-	return item, nil
+	return task, nil
 }
 
-func DeleteItem(id string) bool {
+func DeleteTask(id string) bool {
 	ctx := context.Background()
 	conn, err := config.New()
 
@@ -128,7 +128,7 @@ func DeleteItem(id string) bool {
 		return false
 	}
 
-	err = queries.DeleteItem(ctx, parsedUUID)
+	err = queries.DeleteTask(ctx, parsedUUID)
 	if err != nil {
 		fmt.Printf("Failed with error: %v\n", err)
 		return false

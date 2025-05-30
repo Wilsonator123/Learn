@@ -18,22 +18,22 @@ func New(e* echo.Echo ){
 		return c.Render(http.StatusOK, "index", map[string]interface{}{});
 	})
 
-	e.GET("/list", func(c echo.Context) error {
+	e.GET("/task", func(c echo.Context) error {
 		
 		response, err := handlers.ListAll()
 
 		if c.Request().Header.Get("HX-Request") == "true" {
 			if err != nil {
-				return c.Render(http.StatusOK, "ColumnList", map[string]interface{}{"Error": err})
+				return c.Render(http.StatusOK, "TaskList", map[string]interface{}{"Error": err})
 			}
 			
-			return c.Render(http.StatusOK, "ColumnList", map[string]interface{}{"Data": response, "Error": err})
+			return c.Render(http.StatusOK, "TaskList", map[string]interface{}{"Data": response, "Error": err})
 		}
 		
 		return c.Render(http.StatusOK, "index", map[string]interface{}{"Data": response, "Error": err})
 	})
 
-	e.POST("/list", func(c echo.Context) error {
+	e.POST("/task", func(c echo.Context) error {
 		
 		positionStr := c.FormValue("position")
 		positionInt, err := strconv.ParseInt(positionStr, 10, 16)
@@ -41,18 +41,18 @@ func New(e* echo.Echo ){
 			return c.String(http.StatusBadRequest, "Invalid position value")
 		}
 		positionInt16 := int16(positionInt)
-		newItem := model.NewItem{
+		newTask := model.NewTask{
 			Title: c.FormValue("title"),
 			Description: c.FormValue("description"),
 			Position: &positionInt16,
 		}
 		
-		if err := validate.Struct(newItem); err != nil {
+		if err := validate.Struct(newTask); err != nil {
 			fmt.Printf("Error parsing form data %v\n", err)
 			return c.String(http.StatusBadRequest, "Failed to parse form data")
 		}
 
-		response, err := handlers.CreateItem(newItem)
+		response, err := handlers.CreateTask(newTask)
 
 		fmt.Printf("User created with id %v\n", response)
 
@@ -62,23 +62,23 @@ func New(e* echo.Echo ){
 			return c.JSON(http.StatusInternalServerError, err.Error())
 		}
 
-		return c.Render(http.StatusCreated, "item", response)
+		return c.Render(http.StatusCreated, "task", response)
 	})
 
-	e.GET("/list/:id", func(c echo.Context) error {
+	e.GET("/task/:id", func(c echo.Context) error {
 
 		id := c.Param("id")
 
-		response, err := handlers.GetItem(id)
+		response, err := handlers.GetTask(id)
 		
-		return c.Render(http.StatusOK, "ItemDetails", map[string]interface{}{"Data": response, "Error": err})
+		return c.Render(http.StatusOK, "TaskDetails", map[string]interface{}{"Data": response, "Error": err})
 	})
 
-	e.DELETE("/list/:id", func(c echo.Context) error {
+	e.DELETE("/task/:id", func(c echo.Context) error {
 		
 		id := c.Param("id")
 
-		handlers.DeleteItem(id)
+		handlers.DeleteTask(id)
 
 		return c.HTML(http.StatusOK,"<div>Deleted</div>" )
 

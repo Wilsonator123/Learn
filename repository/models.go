@@ -11,7 +11,15 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type List struct {
+type Tab struct {
+	ID        uuid.UUID `json:"id"`
+	Title     string    `json:"title"`
+	Layout    []byte    `json:"layout"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type Task struct {
 	ID          uuid.UUID   `json:"id"`
 	Title       string      `json:"title"`
 	Description string      `json:"description"`
@@ -19,12 +27,4 @@ type List struct {
 	UpdatedAt   time.Time   `json:"updated_at"`
 	TabID       pgtype.UUID `json:"tab_id"`
 	Position    pgtype.Int2 `json:"position"`
-}
-
-type Tab struct {
-	ID        uuid.UUID `json:"id"`
-	Title     string    `json:"title"`
-	Layout    []byte    `json:"layout"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
 }

@@ -1,4 +1,4 @@
-{{define "item"}}
+{{define "task"}}
 <div class="task-item">
   <div class=" task-content">
     <h3 class="task-title">{{ .Title }}</h3>
@@ -15,7 +15,7 @@
       </svg>
       <span>Edit</span>
     </button>
-    <button class="task-btn delete-btn" hx-delete="/list/{{ .ID }}"
+    <button class="task-btn delete-btn" hx-delete="/task/{{ .ID }}"
       hx-confirm="Are you sure you want to delete this task?">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
