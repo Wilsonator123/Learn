@@ -5,8 +5,8 @@ from list;
 INSERT INTO list(
     id,
     title,
+    position,
     description,
-    priority,
     created_at,
     updated_at
   )
@@ -16,7 +16,7 @@ RETURNING *;
 UPDATE list
 SET title = $2,
   description = $3,
-  priority = $4,
+  position = $4,
   updated_at = $5
 WHERE id = $1;
 -- name: GetItem :one

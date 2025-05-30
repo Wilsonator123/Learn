@@ -24,9 +24,9 @@ func New(e* echo.Echo ){
 
 		if c.Request().Header.Get("HX-Request") == "true" {
 			if err != nil {
-			return c.Render(http.StatusOK, "ColumnList", map[string]interface{}{"Error": err})
-				
+				return c.Render(http.StatusOK, "ColumnList", map[string]interface{}{"Error": err})
 			}
+			
 			return c.Render(http.StatusOK, "ColumnList", map[string]interface{}{"Data": response, "Error": err})
 		}
 		
@@ -35,16 +35,16 @@ func New(e* echo.Echo ){
 
 	e.POST("/list", func(c echo.Context) error {
 		
-		priorityStr := c.FormValue("priority")
-		priorityInt, err := strconv.ParseInt(priorityStr, 10, 16)
+		positionStr := c.FormValue("position")
+		positionInt, err := strconv.ParseInt(positionStr, 10, 16)
 		if err != nil {
-			return c.String(http.StatusBadRequest, "Invalid priority value")
+			return c.String(http.StatusBadRequest, "Invalid position value")
 		}
-		priorityInt16 := int16(priorityInt)
+		positionInt16 := int16(positionInt)
 		newItem := model.NewItem{
 			Title: c.FormValue("title"),
 			Description: c.FormValue("description"),
-			Priority: &priorityInt16,
+			Position: &positionInt16,
 		}
 		
 		if err := validate.Struct(newItem); err != nil {

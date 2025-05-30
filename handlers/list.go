@@ -7,48 +7,34 @@ import (
 	"time"
 
 	"github.com/Wilsonator123/Learn/config"
+	"github.com/Wilsonator123/Learn/helper"
 	"github.com/Wilsonator123/Learn/model"
 	"github.com/Wilsonator123/Learn/repository"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type PriorityList struct{
-	NoPriority []repository.List
-	Priority1 []repository.List
-	Priority2 []repository.List
-	Priority3 []repository.List
+type Column struct {
+	Tasks []repository.List `json:"tasks"`
+	Position int16 `json:"position"`
 }
 
-func ListAll() (PriorityList, error) {
+func ListAll() ([]helper.GroupedColumns, error) {
 	ctx := context.Background()
 	conn, err := config.New()
 
 	if err != nil {
-		return PriorityList{}, errors.New("database connection failed")
+		return []helper.GroupedColumns{}, errors.New("database connection failed")
 	}
 
 	queries := repository.New(conn)
-	var response PriorityList;
 
-	rows, err := queries.GetAllItems(ctx)
+	tasks, err := queries.GetAllItems(ctx)
+
+	response := helper.GroupTasksByColumn(tasks)
 	if err != nil {
 		fmt.Printf("Failed with error: %v\n", err)
-		return PriorityList{}, err
-	}
-	
-	for i := range rows {
-		priority := rows[i].Priority.Int16
-		switch priority {
-		case 1:
-			response.Priority1 = append(response.Priority1, rows[i])
-		case 2:
-			response.Priority2 = append(response.Priority2, rows[i])
-		case 3:
-			response.Priority3 = append(response.Priority3, rows[i])
-		default:
-			response.NoPriority = append(response.NoPriority, rows[i])
-		}
+		return []helper.GroupedColumns{}, err
 	}
 
 	conn.Close(ctx)
@@ -106,9 +92,9 @@ func CreateItem(input model.NewItem) (repository.List, error) {
 		UpdatedAt:   now,
 	}
 
-	if input.Priority != nil {
-		newItem.Priority = pgtype.Int2{
-			Int16: *input.Priority,
+	if input.Position != nil {
+		newItem.Position = pgtype.Int2{
+			Int16: *input.Position,
 			Valid:  true,
 		}
 	}

@@ -15,7 +15,16 @@ type List struct {
 	ID          uuid.UUID   `json:"id"`
 	Title       string      `json:"title"`
 	Description string      `json:"description"`
-	Priority    pgtype.Int2 `json:"priority"`
 	CreatedAt   time.Time   `json:"created_at"`
 	UpdatedAt   time.Time   `json:"updated_at"`
+	TabID       pgtype.UUID `json:"tab_id"`
+	Position    pgtype.Int2 `json:"position"`
+}
+
+type Tab struct {
+	ID        uuid.UUID `json:"id"`
+	Title     string    `json:"title"`
+	Layout    []byte    `json:"layout"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

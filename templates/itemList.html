@@ -1,34 +1,50 @@
 {{ define "ColumnList"}}
 <div class="column">
-  <h2>No Priority</h2>
+  <h2>Backlog</h2>
   {{ if .Data }}
-  {{ range $index, $item := .Data.NoPriority }}
-  {{ template "item" $item }}
-  {{end}}
+    {{ range $index, $tasks := .Data }}
+      {{ if eq $tasks.Position 1 }}
+        {{ range $index, $task := $tasks.Tasks }}
+          {{ template "item" $task }}
+        {{end}}
+      {{end}}
+    {{end}}
   {{end}}
 </div>
-<div class="column dropzone" data-priority="1">
-  <h2>Priority 1</h2>
+<div class="column dropzone">
+  <h2>In Progress</h2>
   {{ if .Data }}
-  {{ range $index, $item := .Data.Priority1 }}
-  {{ template "item" $item }}
-  {{end}}
+    {{ range $index, $tasks := .Data }}
+      {{ if eq $tasks.Position 2 }}
+        {{ range $index, $task := $tasks.Tasks }}
+          {{ template "item" $task }}
+        {{end}}
+      {{end}}
+    {{end}}
   {{end}}
 </div>
-<div class="column dropzone" data-priority="2">
-  <h2>Priority 2</h2>
+<div class="column dropzone">
+  <h2>In Review</h2>
   {{ if .Data }}
-  {{ range $index, $item := .Data.Priority2 }}
-  {{ template "item" $item }}
-  {{end}}
+    {{ range $index, $tasks := .Data }}
+      {{ if eq $tasks.Position 3 }}
+        {{ range $index, $task := $tasks.Tasks }}
+          {{ template "item" $task }}
+        {{end}}
+      {{end}}
+    {{end}}
   {{end}}
 </div>
-<div class="column dropzone" id="tasks-container" data-priority="3">
-  <h2>Priority 3</h2>
-  {{ if .Data }}
-  {{ range $index, $item := .Data.Priority3 }}
-  {{ template "item" $item }}
-  {{end}}
-  {{end}}
+<div class="column dropzone" id="tasks-container">
+  <h2>Done</h2>
+  {{ with .Data }}
+    {{ range . }}
+      {{ if eq .Position 4 }}
+        {{ range .Tasks }}
+          {{ template "item" . }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
 </div>
 {{end}}
