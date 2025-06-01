@@ -8,6 +8,9 @@
     <title>HTMX Modern List</title>
     <script src="https://unpkg.com/htmx.org@1.9.6"></script>
     <link rel="stylesheet" href="static/css/index.css">
+    <link rel="stylesheet" href="static/css/itemForm.css">
+    <link rel="stylesheet" href="static/css/taskList.css">
+    <link rel="stylesheet" href="static/css/task.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -27,6 +30,17 @@
 
         <!-- Add Item Form -->
         {{ template "newTaskForm" }}
+
+        <!-- Tabs -->
+        <div class="tabs" x-data="{ activeTab: 0}">
+          <label @click="activeTab = 0" class="tab" :class="{ 'active': activeTab === 0 }">Tab
+            1</label>
+          <label @click="activeTab = 1" class="tab" :class="{ 'active': activeTab === 1 }">Tab
+            2</label>
+          <label @click="activeTab = 2" class="tab" :class="{ 'active': activeTab === 2 }">Tab
+            3</label>
+          <div class="tab">+</div>
+        </div>
 
         <!-- Task List -->
         <div class="columns" hx-get="/task" hx-swap="innerHTML" hx-trigger="load, itemsChanged from:body">
