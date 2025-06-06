@@ -3,7 +3,7 @@
   :root {
     --background: #1E1E1E;
     --foreground: #fff;
-    --card: #ffffff;
+    --card: #1E1E1E;
     --card-foreground: #fff;
     --primary: #fff2df;
     --primary-foreground: #000;
@@ -104,7 +104,14 @@
 
   }
 
-  .tabs {
+  .tab-list {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 30px;
+  }
+
+  #tabs {
     display: flex;
     align-items: center;
     gap: 20px;

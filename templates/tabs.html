@@ -1,0 +1,12 @@
+{{ define "tab" }}
+
+{{ if .Data }}
+
+{{ range $index, $tab := .Data }}
+<label @click="activeTab={{ $index }}" class="tab"
+  :class="{ 'active': activeTab === {{ $index }} }">{{ $tab.Title }}</label>
+{{end}}
+
+{{end}}
+
+{{ end }}

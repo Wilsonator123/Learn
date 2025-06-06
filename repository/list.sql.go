@@ -123,9 +123,9 @@ func (q *Queries) GetTask(ctx context.Context, id uuid.UUID) (Task, error) {
 
 const updateTask = `-- name: UpdateTask :exec
 UPDATE task
-SET title = $2,
-  description = $3,
-  position = $4,
+SET title = COALESCE($2, title),
+  description = COALESCE($3, description),
+  position = COALESCE($4, position),
   updated_at = $5
 WHERE id = $1
 `

@@ -83,6 +83,38 @@ func New(e* echo.Echo ){
 		return c.HTML(http.StatusOK,"<div>Deleted</div>" )
 
 	})
+
+	e.GET("/tab", func(c echo.Context) error {
+		
+		response, err := handlers.ListTabs()
+
+		if c.Request().Header.Get("HX-Request") == "true" {
+			if err != nil {
+				return c.Render(http.StatusOK, "tab", map[string]interface{}{"Error": err})
+			}
+			
+			return c.Render(http.StatusOK, "tab", map[string]interface{}{"Data": response, "Error": err})
+		}
+		
+		return c.Render(http.StatusOK, "index", map[string]interface{}{"Data": response, "Error": err})
+	})
+
+	e.POST("/tab", func(c echo.Context) error {
+
+		err := handlers.CreateTab()
+
+		if err != nil {
+			c.Response().WriteHeader(http.StatusInternalServerError)
+		}
+
+		c.Response().Header().Add("HX-Trigger", "newTab")
+		c.Response().WriteHeader(http.StatusCreated)
+		return nil
+	})
+
+	// e.GET("/tab/:tab/tasks", func(c echo.Context) error {
+
+	// })
 	
 
 }

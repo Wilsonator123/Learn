@@ -14,9 +14,9 @@ VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING *;
 -- name: UpdateTask :exec
 UPDATE task
-SET title = $2,
-  description = $3,
-  position = $4,
+SET title = COALESCE($2, title),
+  description = COALESCE($3, description),
+  position = COALESCE($4, position),
   updated_at = $5
 WHERE id = $1;
 -- name: GetTask :one
