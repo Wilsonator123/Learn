@@ -3,8 +3,9 @@
 {{ if .Data }}
 
 {{ range $index, $tab := .Data }}
-<label @click="activeTab={{ $index }}" class="tab"
-  :class="{ 'active': activeTab === {{ $index }} }">{{ $tab.Title }}</label>
+<label @click="activeTab='{{ $index }}'; $store.tabID='{{ $tab.ID }}'" class=" tab"
+  :class="{ 'active': activeTab === '{{ $index }}' }">
+  {{ $tab.Title }}</label>
 {{end}}
 
 {{end}}

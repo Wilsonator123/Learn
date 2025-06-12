@@ -18,7 +18,7 @@
       rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <script src="/static/js/scripts.js" defer></script>
+    <script src="/static/js/scripts.js"></script>
   </head>
 
   <body>
@@ -36,14 +36,15 @@
         {{ template "newTaskForm" }}
 
         <!-- Tabs -->
-        <div class="tab-list" x-data="{ activeTab: 0}" hx-get="/tab" hx-target="#tabs" hx-swap="innerHTML"
+        <div class="tab-list" x-data="{ activeTab: 'test'}" hx-get="/tab" hx-target="#tabs" hx-swap="innerHTML"
           hx-trigger="load, newTab from:body">
           <span id="tabs">
           </span>
           <a class="tab" hx-post="/tab" hx-on::after-request="htmx.trigger(document.body, 'tabsChanged')">+</a>
         </div>
         <!-- Task List -->
-        <div class="columns" hx-get="/task" hx-swap="innerHTML" hx-trigger="load, itemsChanged from:body">
+        <div class="columns" x-bind:hx-get="`tab/${$store.tabID}/task`" hx-swap="innerHTML"
+          hx-trigger="load, itemsChanged from:body">
         </div>
 
       </div>
