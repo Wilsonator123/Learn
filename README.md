@@ -1,5 +1,13 @@
 # Learn
 
+S - There are too many new tech and skills I want to learn and develop, and its hard to keep track on what I am learning
+
+T - Build a way to manage and learn new skills and technology
+
+A - Build a board like website which allows me to create tasks and move them across the board depending on its status
+
+R - Was able to develop my skills in Go and HTMX whilst having a way to keep track of tasks
+
 ## Stack
 
 - GO
